@@ -18,15 +18,11 @@ User Function ACADA001()
 	Local aArea   := GetArea()
 	Local oBrowse
 	
-	Private cCadastro := "Fila do Rest"
+	Private cCadastro := "Fila de Integracao"
 	
-	//Instânciando FWMBrowse - Somente com dicionário de dados
 	oBrowse := FWMBrowse():New()
-	
-	//Setando a tabela de cadastro de Autor/Interprete
 	oBrowse:SetAlias("ZZM")
-	//Setando a descrição da rotina
-	oBrowse:SetDescription(cTitulo)
+	oBrowse:SetDescription(cCadastro)
 	
 	//Legendas
 	oBrowse:AddLegend( "ZZM->ZM_STATUS == '0'", "YELLOW",	"Nao Processado" )
@@ -68,16 +64,16 @@ Static Function ModelDef()
 	Local oModel := Nil
 	
 	//Criação da estrutura de dados utilizada na interface
-	Local oStSBM := FWFormStruct(1, "ZZM")
+	Local oStru := FWFormStruct(1, "ZZM")
 	
 	//Instanciando o modelo, não é recomendado colocar nome da user function (por causa do u_), respeitando 10 caracteres
-	oModel := MPFormModel():New("ACADA001M",/*bPre*/, /*bPos*/,/*bCommit*/,/*bCancel*/) 
+	oModel := MPFormModel():New("ACADM001",/*bPre*/, /*bPos*/,/*bCommit*/,/*bCancel*/) 
 	
 	//Atribuindo formulários para o modelo
-	oModel:AddFields("FORMZZM",/*cOwner*/,oStZZM)
+	oModel:AddFields("FORMZZM",/*cOwner*/,oStru)
 	
 	//Setando a chave primária da rotina
-	oModel:SetPrimaryKey({'ZM_FILIAL'})
+	oModel:SetPrimaryKey({'ZM_FILIAL','ZM_SEQ'})
 	
 	//Adicionando descrição ao modelo
 	oModel:SetDescription(cCadastro)
@@ -99,7 +95,7 @@ Static Function ViewDef()
 	Local oModel := FWLoadModel("ACADA001")
 	
 	//Criação da estrutura de dados utilizada na interface do cadastro de Autor
-	Local oStSBM := FWFormStruct(2, "ZZM")
+	Local oStru := FWFormStruct(2, "ZZM")
 	
 	//Criando oView como nulo
 	Local oView := Nil
@@ -108,7 +104,7 @@ Static Function ViewDef()
 	oView:SetModel(oModel)
 	
 	//Atribuindo formulários para interface
-	oView:AddField("VIEW_ZZM", oStZZM, "FORMZZM")
+	oView:AddField("VIEW_ZZM", oStru, "FORMZZM")
 	
 	//Criando um container com nome tela com 100%
 	oView:CreateHorizontalBox("TELA",100)
@@ -124,7 +120,6 @@ Static Function ViewDef()
 Return oView
 
 
-
 /*---------------------------------------------------------------------*
  | Func:  ACADA001L                                                    |
  | Autor: Fabio Carvalho                                               |
@@ -137,7 +132,7 @@ User Function ACAD001L()
 	Local aLegenda := {}
 	
 	//Monta as cores
-	AADD(aLegenda,{"BR_AMARELO",	"Não Processado"})
+	AADD(aLegenda,{"BR_AMARELO",	"N�o Processado"})
 	AADD(aLegenda,{"BR_VERDE",		"Processado"  })
 	AADD(aLegenda,{"BR_VERMELHO",	"Processado com Erro"})
 	
