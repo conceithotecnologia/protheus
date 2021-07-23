@@ -4,19 +4,21 @@
 
 //Variáveis Estáticas
 
-/*/{Protheus.doc} zACADA001
+/*/{Protheus.doc} ACADA001
 Função para cadastro de Fila de REST
 @author Fabio Carvalho
 @since 21/07/2021
 @version 1.0
 	@return Nil, Função não tem retorno
 	@example
-	u_zACADA001()
+	u_ACADA001()
 	@obs Não se pode executar função MVC dentro do fórmulas
 /*/
-User Function zACADA001()
+User Function ACADA001()
 	Local aArea   := GetArea()
 	Local oBrowse
+	
+	Private cCadastro := "Fila do Rest"
 	
 	//Instânciando FWMBrowse - Somente com dicionário de dados
 	oBrowse := FWMBrowse():New()
@@ -49,11 +51,8 @@ Static Function MenuDef()
 	Local aRot := {}
 	
 	//Adicionando opções
-	ADD OPTION aRot TITLE 'Visualizar' ACTION 'VIEWDEF.zACADA001' OPERATION MODEL_OPERATION_VIEW   ACCESS 0 //OPERATION 1
-	ADD OPTION aRot TITLE 'Legenda'    ACTION 'u_zMVC01Leg'     OPERATION 6                      ACCESS 0 //OPERATION X
-	//ADD OPTION aRot TITLE 'Incluir'    ACTION 'VIEWDEF.zACADA001' OPERATION MODEL_OPERATION_INSERT ACCESS 0 //OPERATION 3
-	//ADD OPTION aRot TITLE 'Alterar'    ACTION 'VIEWDEF.zACADA001' OPERATION MODEL_OPERATION_UPDATE ACCESS 0 //OPERATION 4
-	//ADD OPTION aRot TITLE 'Excluir'    ACTION 'VIEWDEF.zACADA001' OPERATION MODEL_OPERATION_DELETE ACCESS 0 //OPERATION 5
+	ADD OPTION aRot TITLE 'Visualizar' ACTION 'VIEWDEF.ACADA001' OPERATION MODEL_OPERATION_VIEW   ACCESS 0 //OPERATION 1
+	ADD OPTION aRot TITLE 'Legenda'    ACTION 'u_ACADA001L'     OPERATION 6                      ACCESS 0 //OPERATION X
 Return aRot
 
 
@@ -72,7 +71,7 @@ Static Function ModelDef()
 	Local oStSBM := FWFormStruct(1, "ZZM")
 	
 	//Instanciando o modelo, não é recomendado colocar nome da user function (por causa do u_), respeitando 10 caracteres
-	oModel := MPFormModel():New("zACADA001M",/*bPre*/, /*bPos*/,/*bCommit*/,/*bCancel*/) 
+	oModel := MPFormModel():New("ACADA001M",/*bPre*/, /*bPos*/,/*bCommit*/,/*bCancel*/) 
 	
 	//Atribuindo formulários para o modelo
 	oModel:AddFields("FORMZZM",/*cOwner*/,oStZZM)
@@ -81,10 +80,10 @@ Static Function ModelDef()
 	oModel:SetPrimaryKey({'ZM_FILIAL'})
 	
 	//Adicionando descrição ao modelo
-	oModel:SetDescription("Modelo de Dados do Cadastro "+cTitulo)
+	oModel:SetDescription(cCadastro)
 	
 	//Setando a descrição do formulário
-	oModel:GetModel("FORMzzm"):SetDescription("Formulário do Cadastro "+cTitulo)
+	oModel:GetModel("FORMzzm"):SetDescription(cCadastro)
 Return oModel
 
 
@@ -97,10 +96,10 @@ Return oModel
  *---------------------------------------------------------------------*/
 Static Function ViewDef()
 	//Criação do objeto do modelo de dados da Interface do Cadastro de Autor/Interprete
-	Local oModel := FWLoadModel("zACADA001")
+	Local oModel := FWLoadModel("ACADA001")
 	
 	//Criação da estrutura de dados utilizada na interface do cadastro de Autor
-	Local oStSBM := FWFormStruct(2, "ZZM")  //pode se usar um terceiro parâmetro para filtrar os campos exibidos { |cCampo| cCampo $ 'SBM_NOME|SBM_DTAFAL|'}
+	Local oStSBM := FWFormStruct(2, "ZZM")
 	
 	//Criando oView como nulo
 	Local oView := Nil
@@ -115,7 +114,7 @@ Static Function ViewDef()
 	oView:CreateHorizontalBox("TELA",100)
 	
 	//Colocando título do formulário
-	oView:EnableTitleView('VIEW_ZZM', 'Dados do Grupo de Produtos' )  
+	oView:EnableTitleView('VIEW_ZZM', 'Fila do Rest' )  
 	
 	//Força o fechamento da janela na confirmação
 	oView:SetCloseOnOk({||.T.})
@@ -127,14 +126,14 @@ Return oView
 
 
 /*---------------------------------------------------------------------*
- | Func:  zACADA001Leg                                                 |
+ | Func:  ACADA001L                                                    |
  | Autor: Fabio Carvalho                                               |
  | Data:  21/07/2021                                                   |
  | Desc:  Mostrar Legendas                                             |
  | Obs.:  /                                                            |
  *---------------------------------------------------------------------*/
 
-User Function zACAD001Leg()
+User Function ACAD001L()
 	Local aLegenda := {}
 	
 	//Monta as cores
