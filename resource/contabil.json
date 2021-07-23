@@ -1,0 +1,30 @@
+{
+    "lancamentos": [
+        {
+            "CT2_FILIAL": "010101",
+            "CT2_LOTE": "8890",
+            "CT2_SBLOTE": "001",
+            "CT2_DATA": "2021-06-11",
+            "CT2_DOC": "000123",
+            "CT2_VALOR": 34553.18,
+            "CT2_HIST": "INSS 13 SALARIO REF. 062021",
+            "CT2_DEBITO": "2105020001",
+            "CT2_CREDIT": "5101010006",
+            "CT2_CCD": "20009",
+            "CT2_CCC": "20111"
+        },
+        {
+            "CT2_FILIAL": "010101",
+            "CT2_LOTE": "8890",
+            "CT2_SBLOTE": "001",
+            "CT2_DATA": "2021-06-11",
+            "CT2_DOC": "000267",
+            "CT2_valor": 34553.18,
+            "CT2_HIST": "AJUDA DE CUSTO REF. 062021",
+            "CT2_DEBITO": "2105020028",
+            "CT2_CREDIT": "5101010007",
+            "CT2_CCD": "20009",
+            "CT2_CCC": "20111"
+        }
+    ]
+}

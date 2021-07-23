@@ -1,0 +1,34 @@
+{
+    "titulos": [
+        {
+            "E2_FILIAL": "010101",
+            "E2_PREFIXO": "IMP",
+            "E2_NUM": "0000891246",
+            "E2_PARCELA": "01",
+            "E2_TIPO": "BOL",
+            "E2_NATUREZ": "10105",
+            "E2_FORNECE": "000001",
+            "E2_LOJA": "001",
+            "E2_EMISSAO": "2021-06-24",
+            "E2_VENCTO": "2021-07-24",
+            "E2_VENCREA": "2021-07-26",
+            "E2_VALOR": 4728.44,
+            "E2_HIST": "FOLHA DE PAGAMENTO"
+        },
+        {
+            "E2_FILIAL": "010101",
+            "E2_PREFIXO": "IMP",
+            "E2_NUM": "000344002",
+            "E2_PARCELA": "01",
+            "E2_TIPO": "TF",
+            "E2_NATUREZ": "10105",
+            "E2_FORNECE": "000328",
+            "E2_LOJA": "001",
+            "E2_EMISSAO": "2021-06-11",
+            "E2_VENCTO": "2021-07-11",
+            "E2_VENCREA": "2021-07-11",
+            "E2_VALOR": 7000.27,
+            "E2_HIST": "FOLHA DE PAGAMENTO"
+        }
+    ]
+}
