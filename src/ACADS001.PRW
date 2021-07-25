@@ -17,8 +17,13 @@ User Function ACADS001()
     Private lMsHelpAuto := .F.
 
     cError := oJSon:FromJson(cJson) 
-	If cError 
-		cErro := '{"msg": "Erro no Parser do jSon "}'
+	If ValType(cError) != "U"
+		ZZM->(RECLOCK("ZZM", .F.))
+		ZZM->ZZM_STATUS := "2"	// Processado com Erro
+		ZZM->ZZM_DPROC  := Date()
+		ZZM->ZZM_HPROC  := StrTran(Time(), ":", "")
+		ZZM->ZZM_RETORN := 'Erro no Parser do jSon'
+		ZZM->(MsUnLock())
 		Return
 	EndIf
 	
@@ -85,6 +90,11 @@ User Function ACADS001()
 
 	EndIF
 
+	ZZM->(RECLOCK("ZZM", .F.))
+	ZZM->ZZM_STATUS := "1"	// Processado
+	ZZM->ZZM_DPROC  := Date()
+	ZZM->ZZM_HPROC  := StrTran(Time(), ":", "")
+	ZZM->(MsUnLock())
 
 Return
 
@@ -107,7 +117,7 @@ User Function ACADS01I(cJson, cTipo)
 	ZZM->ZZM_TIPO   := cTipo
 	ZZM->ZZM_STATUS := "0"		// Pendente
 	ZZM->ZZM_DTLEIT := Date()
-	ZZM->ZZM_HRPROC := StrTran(Time(), ":", "")
+	ZZM->ZZM_HLEIT  := StrTran(Time(), ":", "")
 	ZZM->ZZM_JSON   := cJson
 
 	MsUnLock()
