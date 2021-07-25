@@ -19,68 +19,71 @@ User Function ACADS001()
     cError := oJSon:FromJson(cJson) 
 	If cError 
 		cErro := '{"msg": "Erro no Parser do jSon "}'
+		Return
 	EndIf
-
-        item    := oJson:GetJsonObject('titulos') 
-        for i := 1 to len(iTem)
-            aMatriz := {}
-            aadd(aMatriz, {"E2_FILIAL",  ALLTRIM(iTem[i]:GetJsonObject('E2_FILIAL')),NIL})
-            aadd(aMatriz, {"E2_PREFIXO", ALLTRIM(iTem[i]:GetJsonObject('E2_PREFIXO')),  NIL})
-            aadd(aMatriz, {"E2_NUM",     ALLTRIM(iTem[i]:GetJsonObject('E2_NUM')),NIL})
-            aadd(aMatriz, {"E2_PARCELA", ALLTRIM(iTem[i]:GetJsonObject('E2_PARCELA')),   NIL})
-            aadd(aMatriz, {"E2_TIPO",    ALLTRIM(iTem[i]:GetJsonObject('E2_TIPO')),   NIL})
-            aadd(aMatriz, {"E2_NATUREZ", ALLTRIM(iTem[i]:GetJsonObject('E2_NATUREZ')),  NIL})
-            aadd(aMatriz, {"E2_FORNECE", ALLTRIM(iTem[i]:GetJsonObject('E2_FORNECE')),NIL})
-            aadd(aMatriz, {"E2_LOJA",    ALLTRIM(iTem[i]:GetJsonObject('E2_LOJA')),NIL})
-            aadd(aMatriz, {"E2_EMISSAO", STOD(SUBS(iTem[i]:GetJsonObject('E2_EMISSAO'),9,2) +;
-                                              SUBS(iTem[i]:GetJsonObject('E2_EMISSAO'),6,2) +;
-                                              SUBS(iTem[i]:GetJsonObject('E2_EMISSAO'),1,4)),NIL})
-            aadd(aMatriz, {"E2_VENCTO",  STOD(SUBS(iTem[i]:GetJsonObject('E2_VENCTO'),9,2) +;
-                                              SUBS(iTem[i]:GetJsonObject('E2_VENCTO'),6,2) +;
-                                              SUBS(iTem[i]:GetJsonObject('E2_VENCTO'),1,4)),NIL})
-            aadd(aMatriz, {"E2_VENCREA", STOD(SUBS(iTem[i]:GetJsonObject('E2_VENCREA'),9,2) +;
-                                              SUBS(iTem[i]:GetJsonObject('E2_VENCREA'),6,2) +;
-                                              SUBS(iTem[i]:GetJsonObject('E2_VENCREA'),1,4)),NIL})
-            aadd(aMatriz, {"E2_VALOR",   iTem[i]:GetJsonObject('E2_VALOR'),   NIL})
-            aadd(aMatriz, {"E2_HIST",    ALLTRIM(iTem[i]:GetJsonObject('E2_HIST')),   NIL})
-            aadd(aDados,aMatriz)
-
-
-        item    := oJson:GetJsonObject('lancamentos') 
-        for i := 1 to len(iTem)
-            aMatriz := {}
-            aadd(aMatriz, {"CT2_FILIAL", ALLTRIM(iTem[i]:GetJsonObject('CT2_FILIAL')),NIL})
-            aadd(aMatriz, {"CT2_LOTE",   ALLTRIM(iTem[i]:GetJsonObject('CT2_LOTE')),  NIL})
-            aadd(aMatriz, {"CT2_SBLOTE", ALLTRIM(iTem[i]:GetJsonObject('CT2_SBLOTE')),NIL})
-            aadd(aMatriz, {"CT2_DATA",   STOD(SUBS(iTem[i]:GetJsonObject('CT2_DATA'),9,2) +;
-                                              SUBS(iTem[i]:GetJsonObject('CT2_DATA'),6,2) +;
-                                              SUBS(iTem[i]:GetJsonObject('CT2_DATA'),1,4)),NIL})
-            aadd(aMatriz, {"CT2_DOC",    ALLTRIM(iTem[i]:GetJsonObject('CT2_DOC')),   NIL})
-            aadd(aMatriz, {"CT2_VALOR",  iTem[i]:GetJsonObject('CT2_VALOR'), NIL})
-            aadd(aMatriz, {"CT2_HIST",   ALLTRIM(iTem[i]:GetJsonObject('CT2_HIST')),  NIL})
-            aadd(aMatriz, {"CT2_DEBITO", ALLTRIM(iTem[i]:GetJsonObject('CT2_DEBITO')),NIL})
-            aadd(aMatriz, {"CT2_CREDIT", ALLTRIM(iTem[i]:GetJsonObject('CT2_CREDIT')),NIL})
-            aadd(aMatriz, {"CT2_CCD",    ALLTRIM(iTem[i]:GetJsonObject('CT2_CCD')),   NIL})
-            aadd(aMatriz, {"CT2_CCC",    ALLTRIM(iTem[i]:GetJsonObject('CT2_CCC')),   NIL})
-            aadd(aDados,aMatriz)
-        next
-
-        // Monta Bloco para execucao da rotina 
-        cExecAuto := "MsExecAuto({|x,y| " + oParseJson['EXECCUR'] + "(x,y)}, aDados, " + cOpc + ")"
-        //Execauto para tabela para pesquisa?
+	
+	IF ZZM->ZZM_TIPO == "0"	// Contabil
+		item    := oJson:GetJsonObject('lancamentos') 
+		for i := 1 to len(iTem)
+			aMatriz := {}
+			aadd(aMatriz, {"CT2_FILIAL", ALLTRIM(iTem[i]:GetJsonObject('CT2_FILIAL')),NIL})
+			aadd(aMatriz, {"CT2_LOTE",   ALLTRIM(iTem[i]:GetJsonObject('CT2_LOTE')),  NIL})
+			aadd(aMatriz, {"CT2_SBLOTE", ALLTRIM(iTem[i]:GetJsonObject('CT2_SBLOTE')),NIL})
+			aadd(aMatriz, {"CT2_DATA",   STOD(SUBS(iTem[i]:GetJsonObject('CT2_DATA'),9,2) +;
+											  SUBS(iTem[i]:GetJsonObject('CT2_DATA'),6,2) +;
+											  SUBS(iTem[i]:GetJsonObject('CT2_DATA'),1,4)),NIL})
+			aadd(aMatriz, {"CT2_DOC",    ALLTRIM(iTem[i]:GetJsonObject('CT2_DOC')),   NIL})
+			aadd(aMatriz, {"CT2_VALOR",  iTem[i]:GetJsonObject('CT2_VALOR'), NIL})
+			aadd(aMatriz, {"CT2_HIST",   ALLTRIM(iTem[i]:GetJsonObject('CT2_HIST')),  NIL})
+			aadd(aMatriz, {"CT2_DEBITO", ALLTRIM(iTem[i]:GetJsonObject('CT2_DEBITO')),NIL})
+			aadd(aMatriz, {"CT2_CREDIT", ALLTRIM(iTem[i]:GetJsonObject('CT2_CREDIT')),NIL})
+			aadd(aMatriz, {"CT2_CCD",    ALLTRIM(iTem[i]:GetJsonObject('CT2_CCD')),   NIL})
+			aadd(aMatriz, {"CT2_CCC",    ALLTRIM(iTem[i]:GetJsonObject('CT2_CCC')),   NIL})
+			aadd(aDados,aMatriz)
+		next
+	ElseIF ZZM->ZZM_TIPO == "1"	// Financeiro
+		item    := oJson:GetJsonObject('titulos') 
+		for i := 1 to len(iTem)
+			aMatriz := {}
+			aadd(aMatriz, {"E2_FILIAL",  ALLTRIM(iTem[i]:GetJsonObject('E2_FILIAL')),NIL})
+			aadd(aMatriz, {"E2_PREFIXO", ALLTRIM(iTem[i]:GetJsonObject('E2_PREFIXO')),  NIL})
+			aadd(aMatriz, {"E2_NUM",     ALLTRIM(iTem[i]:GetJsonObject('E2_NUM')),NIL})
+			aadd(aMatriz, {"E2_PARCELA", ALLTRIM(iTem[i]:GetJsonObject('E2_PARCELA')),   NIL})
+			aadd(aMatriz, {"E2_TIPO",    ALLTRIM(iTem[i]:GetJsonObject('E2_TIPO')),   NIL})
+			aadd(aMatriz, {"E2_NATUREZ", ALLTRIM(iTem[i]:GetJsonObject('E2_NATUREZ')),  NIL})
+			aadd(aMatriz, {"E2_FORNECE", ALLTRIM(iTem[i]:GetJsonObject('E2_FORNECE')),NIL})
+			aadd(aMatriz, {"E2_LOJA",    ALLTRIM(iTem[i]:GetJsonObject('E2_LOJA')),NIL})
+			aadd(aMatriz, {"E2_EMISSAO", STOD(SUBS(iTem[i]:GetJsonObject('E2_EMISSAO'),9,2) +;
+											  SUBS(iTem[i]:GetJsonObject('E2_EMISSAO'),6,2) +;
+											  SUBS(iTem[i]:GetJsonObject('E2_EMISSAO'),1,4)),NIL})
+			aadd(aMatriz, {"E2_VENCTO",  STOD(SUBS(iTem[i]:GetJsonObject('E2_VENCTO'),9,2) +;
+											  SUBS(iTem[i]:GetJsonObject('E2_VENCTO'),6,2) +;
+											  SUBS(iTem[i]:GetJsonObject('E2_VENCTO'),1,4)),NIL})
+			aadd(aMatriz, {"E2_VENCREA", STOD(SUBS(iTem[i]:GetJsonObject('E2_VENCREA'),9,2) +;
+											  SUBS(iTem[i]:GetJsonObject('E2_VENCREA'),6,2) +;
+											  SUBS(iTem[i]:GetJsonObject('E2_VENCREA'),1,4)),NIL})
+			aadd(aMatriz, {"E2_VALOR",   iTem[i]:GetJsonObject('E2_VALOR'),   NIL})
+			aadd(aMatriz, {"E2_HIST",    ALLTRIM(iTem[i]:GetJsonObject('E2_HIST')),   NIL})
+			aadd(aDados,aMatriz)
+		Next
+	EndIF
 
 
-        // Executa rotina automatica
-        &cExecAuto
+	// Monta Bloco para execucao da rotina 
+	cExecAuto := "MsExecAuto({|x,y| " + oParseJson['EXECCUR'] + "(x,y)}, aDados, " + cOpc + ")"
+	//Execauto para tabela para pesquisa?
 
-        If lMsErroAuto
 
-            cErro := MostraErro("\log_cli")
-            SetRestFault(400, EncodeUtf8(cErro))
-            lRet := .F.
+	// Executa rotina automatica
+	&cExecAuto
 
-        EndIF
+	If lMsErroAuto
 
+		cErro := MostraErro("\log_cli")
+		SetRestFault(400, EncodeUtf8(cErro))
+		lRet := .F.
+
+	EndIF
 
 
 Return
