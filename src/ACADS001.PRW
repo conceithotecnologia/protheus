@@ -9,15 +9,17 @@ Função para processamento do JSON do ZZM
 /*/
 User Function ACADS001()
 
-	Local oJson   := JsonObject():New() 
-	Local aDados  := {} 
-    Local aMatriz := {}
-	Local cRetorn := ""   
+	Local oJson    := JsonObject():New()
+    Local aMatriz  := {}
+	Local cRetorno := ""   
+	Local aItem    := {}
+	Local i        := 0
 
     Private lMsErroAuto := .F.
     Private lMsHelpAuto := .F.
 
-    cError := oJSon:FromJson(cJson) 
+    cError := oJSon:FromJson(ZZM->ZZM_JSON)
+
 	If ValType(cError) != "U"
 		ZZM->(RECLOCK("ZZM", .F.))
 		ZZM->ZZM_STATUS := "2"	// Processado com Erro
@@ -29,47 +31,47 @@ User Function ACADS001()
 	EndIf
 	
 	IF ZZM->ZZM_TIPO == "0"	// Contabil
-		item    := oJson:GetJsonObject('lancamentos') 
-		for i := 1 to len(iTem)
+		aItem  := oJson:GetJsonObject('lancamentos') 
+		for i := 1 to len(aItem)
 			aMatriz := {}
-			aadd(aMatriz, {"CT2_FILIAL", ALLTRIM(iTem[i]:GetJsonObject('CT2_FILIAL')),NIL})
-			aadd(aMatriz, {"CT2_LOTE",   ALLTRIM(iTem[i]:GetJsonObject('CT2_LOTE')),  NIL})
-			aadd(aMatriz, {"CT2_SBLOTE", ALLTRIM(iTem[i]:GetJsonObject('CT2_SBLOTE')),NIL})
-			aadd(aMatriz, {"CT2_DATA",   STOD(SUBS(iTem[i]:GetJsonObject('CT2_DATA'),9,2) +;
-											  SUBS(iTem[i]:GetJsonObject('CT2_DATA'),6,2) +;
-											  SUBS(iTem[i]:GetJsonObject('CT2_DATA'),1,4)),NIL})
-			aadd(aMatriz, {"CT2_DOC",    ALLTRIM(iTem[i]:GetJsonObject('CT2_DOC')),   NIL})
-			aadd(aMatriz, {"CT2_VALOR",  iTem[i]:GetJsonObject('CT2_VALOR'), NIL})
-			aadd(aMatriz, {"CT2_HIST",   ALLTRIM(iTem[i]:GetJsonObject('CT2_HIST')),  NIL})
-			aadd(aMatriz, {"CT2_DEBITO", ALLTRIM(iTem[i]:GetJsonObject('CT2_DEBITO')),NIL})
-			aadd(aMatriz, {"CT2_CREDIT", ALLTRIM(iTem[i]:GetJsonObject('CT2_CREDIT')),NIL})
-			aadd(aMatriz, {"CT2_CCD",    ALLTRIM(iTem[i]:GetJsonObject('CT2_CCD')),   NIL})
-			aadd(aMatriz, {"CT2_CCC",    ALLTRIM(iTem[i]:GetJsonObject('CT2_CCC')),   NIL})
+			aadd(aMatriz, {"CT2_FILIAL", ALLTRIM(aItem[i]:GetJsonObject('CT2_FILIAL')),NIL})
+			aadd(aMatriz, {"CT2_LOTE",   ALLTRIM(aItem[i]:GetJsonObject('CT2_LOTE')),  NIL})
+			aadd(aMatriz, {"CT2_SBLOTE", ALLTRIM(aItem[i]:GetJsonObject('CT2_SBLOTE')),NIL})
+			aadd(aMatriz, {"CT2_DATA",   STOD(SUBS(aItem[i]:GetJsonObject('CT2_DATA'),9,2) +;
+											  SUBS(aItem[i]:GetJsonObject('CT2_DATA'),6,2) +;
+											  SUBS(aItem[i]:GetJsonObject('CT2_DATA'),1,4)),NIL})
+			aadd(aMatriz, {"CT2_DOC",    ALLTRIM(aItem[i]:GetJsonObject('CT2_DOC')),   NIL})
+			aadd(aMatriz, {"CT2_VALOR",  aItem[i]:GetJsonObject('CT2_VALOR'), NIL})
+			aadd(aMatriz, {"CT2_HIST",   ALLTRIM(aItem[i]:GetJsonObject('CT2_HIST')),  NIL})
+			aadd(aMatriz, {"CT2_DEBITO", ALLTRIM(aItem[i]:GetJsonObject('CT2_DEBITO')),NIL})
+			aadd(aMatriz, {"CT2_CREDIT", ALLTRIM(aItem[i]:GetJsonObject('CT2_CREDIT')),NIL})
+			aadd(aMatriz, {"CT2_CCD",    ALLTRIM(aItem[i]:GetJsonObject('CT2_CCD')),   NIL})
+			aadd(aMatriz, {"CT2_CCC",    ALLTRIM(aItem[i]:GetJsonObject('CT2_CCC')),   NIL})
 		next
 	ElseIF ZZM->ZZM_TIPO == "1"	// Financeiro
-		item    := oJson:GetJsonObject('titulos') 
-		for i := 1 to len(iTem)
+		aItem := oJson:GetJsonObject('titulos') 
+		for i := 1 to len(aItem)
 			aMatriz := {}
-			M->E2_NUM := ALLTRIM(iTem[i]:GetJsonObject('E2_NUM'))
-			aadd(aMatriz, {"E2_FILIAL",  ALLTRIM(iTem[i]:GetJsonObject('E2_FILIAL')),NIL})
-			aadd(aMatriz, {"E2_PREFIXO", ALLTRIM(iTem[i]:GetJsonObject('E2_PREFIXO')),  NIL})
+			M->E2_NUM := ALLTRIM(aItem[i]:GetJsonObject('E2_NUM'))
+			aadd(aMatriz, {"E2_FILIAL",  ALLTRIM(aItem[i]:GetJsonObject('E2_FILIAL')),NIL})
+			aadd(aMatriz, {"E2_PREFIXO", ALLTRIM(aItem[i]:GetJsonObject('E2_PREFIXO')),  NIL})
 			aadd(aMatriz, {"E2_NUM",     M->E2_NUM,NIL})
-			aadd(aMatriz, {"E2_PARCELA", ALLTRIM(iTem[i]:GetJsonObject('E2_PARCELA')),   NIL})
-			aadd(aMatriz, {"E2_TIPO",    ALLTRIM(iTem[i]:GetJsonObject('E2_TIPO')),   NIL})
-			aadd(aMatriz, {"E2_NATUREZ", ALLTRIM(iTem[i]:GetJsonObject('E2_NATUREZ')),  NIL})
-			aadd(aMatriz, {"E2_FORNECE", ALLTRIM(iTem[i]:GetJsonObject('E2_FORNECE')),NIL})
-			aadd(aMatriz, {"E2_LOJA",    ALLTRIM(iTem[i]:GetJsonObject('E2_LOJA')),NIL})
-			aadd(aMatriz, {"E2_EMISSAO", STOD(SUBS(iTem[i]:GetJsonObject('E2_EMISSAO'),9,2) +;
-											  SUBS(iTem[i]:GetJsonObject('E2_EMISSAO'),6,2) +;
-											  SUBS(iTem[i]:GetJsonObject('E2_EMISSAO'),1,4)),NIL})
-			aadd(aMatriz, {"E2_VENCTO",  STOD(SUBS(iTem[i]:GetJsonObject('E2_VENCTO'),9,2) +;
-											  SUBS(iTem[i]:GetJsonObject('E2_VENCTO'),6,2) +;
-											  SUBS(iTem[i]:GetJsonObject('E2_VENCTO'),1,4)),NIL})
-			aadd(aMatriz, {"E2_VENCREA", STOD(SUBS(iTem[i]:GetJsonObject('E2_VENCREA'),9,2) +;
-											  SUBS(iTem[i]:GetJsonObject('E2_VENCREA'),6,2) +;
-											  SUBS(iTem[i]:GetJsonObject('E2_VENCREA'),1,4)),NIL})
-			aadd(aMatriz, {"E2_VALOR",   Val(iTem[i]:GetJsonObject('E2_VALOR')),   NIL})
-			aadd(aMatriz, {"E2_HIST",    ALLTRIM(iTem[i]:GetJsonObject('E2_HIST')),   NIL})
+			aadd(aMatriz, {"E2_PARCELA", ALLTRIM(aItem[i]:GetJsonObject('E2_PARCELA')),   NIL})
+			aadd(aMatriz, {"E2_TIPO",    ALLTRIM(aItem[i]:GetJsonObject('E2_TIPO')),   NIL})
+			aadd(aMatriz, {"E2_NATUREZ", ALLTRIM(aItem[i]:GetJsonObject('E2_NATUREZ')),  NIL})
+			aadd(aMatriz, {"E2_FORNECE", ALLTRIM(aItem[i]:GetJsonObject('E2_FORNECE')),NIL})
+			aadd(aMatriz, {"E2_LOJA",    ALLTRIM(aItem[i]:GetJsonObject('E2_LOJA')),NIL})
+			aadd(aMatriz, {"E2_EMISSAO", STOD(SUBS(aItem[i]:GetJsonObject('E2_EMISSAO'),9,2) +;
+											  SUBS(aItem[i]:GetJsonObject('E2_EMISSAO'),6,2) +;
+											  SUBS(aItem[i]:GetJsonObject('E2_EMISSAO'),1,4)),NIL})
+			aadd(aMatriz, {"E2_VENCTO",  STOD(SUBS(aItem[i]:GetJsonObject('E2_VENCTO'),9,2) +;
+											  SUBS(aItem[i]:GetJsonObject('E2_VENCTO'),6,2) +;
+											  SUBS(aItem[i]:GetJsonObject('E2_VENCTO'),1,4)),NIL})
+			aadd(aMatriz, {"E2_VENCREA", STOD(SUBS(aItem[i]:GetJsonObject('E2_VENCREA'),9,2) +;
+											  SUBS(aItem[i]:GetJsonObject('E2_VENCREA'),6,2) +;
+											  SUBS(aItem[i]:GetJsonObject('E2_VENCREA'),1,4)),NIL})
+			aadd(aMatriz, {"E2_VALOR",   aItem[i]:GetJsonObject('E2_VALOR'),   NIL})
+			aadd(aMatriz, {"E2_HIST",    ALLTRIM(aItem[i]:GetJsonObject('E2_HIST')),   NIL})
 
 			MsExecAuto({|x,y| FINA050(x,y)}, aMatriz, 3)
 

@@ -25,9 +25,9 @@ User Function ACADA001()
 	oBrowse:SetDescription(cCadastro)
 	
 	//Legendas
-	oBrowse:AddLegend( "ZZM->ZM_STATUS == '0'", "YELLOW",	"Nao Processado" )
-	oBrowse:AddLegend( "ZZM->ZM_STATUS == '1'", "GRREN",	"Processado" )
-	oBrowse:AddLegend( "ZZM->ZM_STATUS == '2'", "RED",	    "Processamento com Erro" )
+	oBrowse:AddLegend( "ZZM->ZZM_STATUS == '0'", "YELLOW",	"Nao Processado" )
+	oBrowse:AddLegend( "ZZM->ZZM_STATUS == '1'", "GRREN",	"Processado" )
+	oBrowse:AddLegend( "ZZM->ZZM_STATUS == '2'", "RED",	    "Processamento com Erro" )
 	
 	//Ativa a Browse
 	oBrowse:Activate()

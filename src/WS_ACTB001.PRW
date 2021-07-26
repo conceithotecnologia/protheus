@@ -16,9 +16,9 @@ Webservice REST que realiza a inclusÃ£o do JSON na tabela de fila do REST (ZZM)
 @version 2.0
 /*/
 //-------------------------------------------------------------------
-WsRestFul LANCTOCONTABIL DESCRIPTION "Permite a inclusÃ£o de JSON na fila para inclusÃ£o de lanÃ§amentos contÃ¡beis (CT2)"
+WsRestFul LANCTOCONTABIL DESCRIPTION "Permite a inclusão de JSON na fila para lançamentos contábeis (CT2)"
 
-    WSMETHOD POST DESCRIPTION "Permite a inclusÃ£o de JSON na fila para inclusÃ£o de lanÃ§amentos contÃ¡beis (CT2)"
+    WSMETHOD POST DESCRIPTION "Permite a inclusão de JSON na fila para inclusão de lançamentos contábeis (CT2)"
 
 End WsRestFul
 
@@ -32,29 +32,25 @@ Method POST
 //-------------------------------------------------------------------
 WsMethod POST WSRECEIVE idUrlParam WsService LANCTOCONTABIL
 
-    Local cJSON      := Self:GetContent() // Pega a string do JSON
-    Local oParseJSON := Nil
-    Local aDados     := {} 
-    Local aMatriz    := {}
-    Local cErro      := ""
-    Local lRet       := .T.
-    Local item, i
-    Local cJSONRet
+    Local cJSON  := Self:GetContent() // Pega a string do JSON
+    Local oJson  := Nil
+    Local cErro  := ""
 
     // define o tipo de retorno do metodo
     Self:SetContentType("application/json")
+    oJson  := JsonObject():New()
+    cError := oJSon:FromJson(cJson) 
 
    If ValType(cError) != "U"
 
         cErro := '{"msg": "Erro no Parser do jSon "}'
         SetRestFault(400, cErro)
-        lRet := .F.
     Else
 		U_ACADS01I(cJson, "0")	// Lancto
 
-		cJSONRet := '{"msg": "Sucesso"}'
+		cJSONRet := '{ "msg": "Sucesso", "ID": "' + ZZM->ZZM_SEQ + '" } '
 		Self:SetResponse( cJSONRet )
 
     EndIf
 
-Return(lRet)
+Return(.T.)
