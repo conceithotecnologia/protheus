@@ -1,9 +1,9 @@
 /*/{Protheus.doc} ACADA001
-Fun√ß√£o para processamento do JSON do ZZM
+FunÁ„o para processamento do JSON do ZZM
 @author Wagner Mobile Costa
 @since 25/07/2021
 @version 1.0
-	@return Nil, Fun√ß√£o n√£o tem retorno
+	@return Nil, FunÁ„o n„o tem retorno
 	@example
 	u_ACADS001()
 /*/
@@ -17,6 +17,11 @@ User Function ACADS001()
 
     Private lMsErroAuto := .F.
     Private lMsHelpAuto := .F.
+
+	If ZZM->ZZM_STATUS <> "0"
+		MsgInfo("Item j· processado")
+		Return
+	EndIf
 
     cError := oJSon:FromJson(ZZM->ZZM_JSON)
 
@@ -34,13 +39,13 @@ User Function ACADS001()
 		aItem  := oJson:GetJsonObject('lancamentos') 
 		for i := 1 to len(aItem)
 			aMatriz := {}
-			aadd(aMatriz, {"CT2_FILIAL", ALLTRIM(aItem[i]:GetJsonObject('CT2_FILIAL')),NIL})
-			aadd(aMatriz, {"CT2_LOTE",   ALLTRIM(aItem[i]:GetJsonObject('CT2_LOTE')),  NIL})
-			aadd(aMatriz, {"CT2_SBLOTE", ALLTRIM(aItem[i]:GetJsonObject('CT2_SBLOTE')),NIL})
-			aadd(aMatriz, {"CT2_DATA",   STOD(SUBS(aItem[i]:GetJsonObject('CT2_DATA'),9,2) +;
-											  SUBS(aItem[i]:GetJsonObject('CT2_DATA'),6,2) +;
-											  SUBS(aItem[i]:GetJsonObject('CT2_DATA'),1,4)),NIL})
-			aadd(aMatriz, {"CT2_DOC",    ALLTRIM(aItem[i]:GetJsonObject('CT2_DOC')),   NIL})
+			// aadd(aMatriz, {"CT2_FILIAL", ALLTRIM(aItem[i]:GetJsonObject('CT2_FILIAL')),NIL})
+			//aadd(aMatriz, {"CT2_LOTE",   ALLTRIM(aItem[i]:GetJsonObject('CT2_LOTE')),  NIL})
+			//aadd(aMatriz, {"CT2_SBLOTE", ALLTRIM(aItem[i]:GetJsonObject('CT2_SBLOTE')),NIL})
+			//aadd(aMatriz, {"CT2_DATA",   STOD(SUBS(aItem[i]:GetJsonObject('CT2_DATA'),9,2) +;
+			//								  SUBS(aItem[i]:GetJsonObject('CT2_DATA'),6,2) +;
+			//								  SUBS(aItem[i]:GetJsonObject('CT2_DATA'),1,4)),NIL})
+			//aadd(aMatriz, {"CT2_DOC",    ALLTRIM(aItem[i]:GetJsonObject('CT2_DOC')),   NIL})
 			aadd(aMatriz, {"CT2_VALOR",  aItem[i]:GetJsonObject('CT2_VALOR'), NIL})
 			aadd(aMatriz, {"CT2_HIST",   ALLTRIM(aItem[i]:GetJsonObject('CT2_HIST')),  NIL})
 			aadd(aMatriz, {"CT2_DEBITO", ALLTRIM(aItem[i]:GetJsonObject('CT2_DEBITO')),NIL})
@@ -101,7 +106,7 @@ Inclus√£o do registro ZZM para processamento
 @author Wagner Mobile Costa
 @since 25/07/2021
 @version 1.0
-	@return Nil, Fun√ß√£o n√£o tem retorno
+	@return String, Sequencia Incluida
 	@example
 	u_ACADS01I(cJson, cTipo)
 /*/

@@ -80,7 +80,7 @@ Static Function ModelDef()
 	oModel:SetDescription(cCadastro)
 	
 	//Setando a descrição do formulário
-	oModel:GetModel("FORMzzm"):SetDescription(cCadastro)
+	oModel:GetModel("FORMZZM"):SetDescription(cCadastro)
 Return oModel
 
 
