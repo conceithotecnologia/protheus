@@ -9,9 +9,10 @@ Função para processamento do JSON do ZZM
 /*/
 User Function ACADS001()
 
-	Local oJson		 := JsonObject():New() 
-	Local aDados     := {} 
-    Local aMatriz    := {}
+	Local oJson   := JsonObject():New() 
+	Local aDados  := {} 
+    Local aMatriz := {}
+	Local cRetorn := ""   
 
     Private lMsErroAuto := .F.
     Private lMsHelpAuto := .F.
@@ -44,15 +45,15 @@ User Function ACADS001()
 			aadd(aMatriz, {"CT2_CREDIT", ALLTRIM(iTem[i]:GetJsonObject('CT2_CREDIT')),NIL})
 			aadd(aMatriz, {"CT2_CCD",    ALLTRIM(iTem[i]:GetJsonObject('CT2_CCD')),   NIL})
 			aadd(aMatriz, {"CT2_CCC",    ALLTRIM(iTem[i]:GetJsonObject('CT2_CCC')),   NIL})
-			aadd(aDados,aMatriz)
 		next
 	ElseIF ZZM->ZZM_TIPO == "1"	// Financeiro
 		item    := oJson:GetJsonObject('titulos') 
 		for i := 1 to len(iTem)
 			aMatriz := {}
+			M->E2_NUM := ALLTRIM(iTem[i]:GetJsonObject('E2_NUM'))
 			aadd(aMatriz, {"E2_FILIAL",  ALLTRIM(iTem[i]:GetJsonObject('E2_FILIAL')),NIL})
 			aadd(aMatriz, {"E2_PREFIXO", ALLTRIM(iTem[i]:GetJsonObject('E2_PREFIXO')),  NIL})
-			aadd(aMatriz, {"E2_NUM",     ALLTRIM(iTem[i]:GetJsonObject('E2_NUM')),NIL})
+			aadd(aMatriz, {"E2_NUM",     M->E2_NUM,NIL})
 			aadd(aMatriz, {"E2_PARCELA", ALLTRIM(iTem[i]:GetJsonObject('E2_PARCELA')),   NIL})
 			aadd(aMatriz, {"E2_TIPO",    ALLTRIM(iTem[i]:GetJsonObject('E2_TIPO')),   NIL})
 			aadd(aMatriz, {"E2_NATUREZ", ALLTRIM(iTem[i]:GetJsonObject('E2_NATUREZ')),  NIL})
@@ -67,33 +68,28 @@ User Function ACADS001()
 			aadd(aMatriz, {"E2_VENCREA", STOD(SUBS(iTem[i]:GetJsonObject('E2_VENCREA'),9,2) +;
 											  SUBS(iTem[i]:GetJsonObject('E2_VENCREA'),6,2) +;
 											  SUBS(iTem[i]:GetJsonObject('E2_VENCREA'),1,4)),NIL})
-			aadd(aMatriz, {"E2_VALOR",   iTem[i]:GetJsonObject('E2_VALOR'),   NIL})
+			aadd(aMatriz, {"E2_VALOR",   Val(iTem[i]:GetJsonObject('E2_VALOR')),   NIL})
 			aadd(aMatriz, {"E2_HIST",    ALLTRIM(iTem[i]:GetJsonObject('E2_HIST')),   NIL})
-			aadd(aDados,aMatriz)
+
+			MsExecAuto({|x,y| FINA050(x,y)}, aMatriz, 3)
+
+			If lMsErroAuto
+				If ! Empty(cRetorno)
+					cRetorno += CHR(13) + Chr(10)
+				EndIF
+				cRetorno += "Titulo: " + M->E2_NUM
+
+				cRetorno += "Erro: " + MostraErro("\log_cli")
+			EndIF
 		Next
 	EndIF
 
 
-	// Monta Bloco para execucao da rotina 
-	cExecAuto := "MsExecAuto({|x,y| " + oParseJson['EXECCUR'] + "(x,y)}, aDados, " + cOpc + ")"
-	//Execauto para tabela para pesquisa?
-
-
-	// Executa rotina automatica
-	&cExecAuto
-
-	If lMsErroAuto
-
-		cErro := MostraErro("\log_cli")
-		SetRestFault(400, EncodeUtf8(cErro))
-		lRet := .F.
-
-	EndIF
-
 	ZZM->(RECLOCK("ZZM", .F.))
-	ZZM->ZZM_STATUS := "1"	// Processado
+	ZZM->ZZM_STATUS := If(Empty(cRetorno), "1", "2")	// Processado com sucesso ou erro
 	ZZM->ZZM_DPROC  := Date()
 	ZZM->ZZM_HPROC  := StrTran(Time(), ":", "")
+	ZZM->ZZM_RETORN := cRetorno
 	ZZM->(MsUnLock())
 
 Return
